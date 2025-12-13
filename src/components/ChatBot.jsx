@@ -233,7 +233,7 @@ function Chatbot() {
                         </button>
                     </div>
                     <div className="share">
-                        {messages.length >= 1 &&
+                        {messages.length >= 3 &&
                             <button
                                 className={`pc-share active`}
                                 onClick={() => setsendModalOpen(x => !x)}
