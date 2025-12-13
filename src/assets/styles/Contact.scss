@@ -1,0 +1,77 @@
+.contact_wrapper svg {
+  font-size: 1em;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.items-container{
+  overflow: hidden;
+}
+
+.contact-form {
+  padding-top: 20px;
+
+  .loader {
+    width: 20px;
+    height: 20px;
+  }
+
+  .css-74d805-MuiButtonBase-root-MuiButton-root.Mui-disabled {
+    color: gray;
+  }
+
+  .form-input {
+    color: black !important;
+    background-color: white;
+    outline: none;
+    width: calc(100% / 2 - 8px);
+    border: none;
+    border-radius: 8px;
+    padding: 20px 10px;
+    transition: all .2s;
+    font-family: monospace;
+
+    @media (max-width: 576px) {
+      width: 100%;
+    }
+  }
+
+  .form-input:focus {
+    box-shadow: rgb(255, 255, 255) 0px 0px 10px 0px;
+  }
+
+  button {
+    float: right;
+    background-color: white;
+    color: #050f0b;
+  }
+
+  button:hover {
+    background-color: rgb(80, 0, 202);
+    color: white;
+  }
+}
+
+label {
+  font-size: 1.2rem;
+  font-family: 'DomaineDispNar-Medium', sans-serif;
+}
+
+.form-flex {
+  display: flex;
+  gap: 15px;
+  padding-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.form-flex .MuiFormControl-root {
+  width: 100%;
+}
+
+form {
+  width: 100% !important;
+}
+
+.body-form {
+  width: 100% !important;
+  margin-bottom: 15px !important;
+}
