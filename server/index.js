@@ -10,7 +10,6 @@ import { Resend } from "resend";
 
 dotenv.config();
 const PING_INTERVAL = 5 * 60 * 1000;
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,6 +29,7 @@ app.use("/chat", limiter);
 const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 setInterval(async () => {
     try {
