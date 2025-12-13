@@ -5,6 +5,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import fetch from "node-fetch";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 const PING_INTERVAL = 5 * 60 * 1000;
@@ -14,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 20 // 20 requests per minute
+    max: 20 
 });
 
 // Middleware
@@ -93,6 +94,37 @@ app.post("/chat", async (req, res) => {
         });
     }
 });
+
+// Share Messages with email
+app.post("/share-email", async (req, res) => {
+    try {
+        const { messages, timestamp } = req.body;
+
+        if (!messages) return res.status(400).json({ error: "No messages to send" });
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,  
+                pass: process.env.EMAIL_PASS   
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER, 
+            subject: `Chatbot messages from user - ${timestamp}`,
+            text: messages
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.json({ status: "ok", message: "Email sent successfully" });
+    } catch (err) {
+        console.error("Email error:", err);
+        res.status(500).json({ error: "Failed to send email" });
+    }
+});
+
 
 // Start server
 app.listen(PORT, () => {
