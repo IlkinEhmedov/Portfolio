@@ -1,4 +1,4 @@
-$pc-size: 500px;
+$pc-size: 560px;
 $pc-gap: 18px;
 $pc-bg: #5000ca;
 $pc-accent: #5000ca;
@@ -97,7 +97,6 @@ $pc-white: #ffffff;
     .pc-panel {
         pointer-events: auto;
         width: $pc-size;
-        max-width: calc(100vw - 2*$pc-gap);
         height: 75vh;
         // background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
         border-radius: 20px;
@@ -122,13 +121,73 @@ $pc-white: #ffffff;
 
         .pc-header {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             padding: 12px 14px;
             background-color: rgb(80, 0, 202, .7);
             backdrop-filter: blur(7px);
             color: $pc-white;
             transition: all .3s;
+            position: relative;
+            z-index: 10;
+
+            .share {
+                display: flex;
+                align-items: center;
+                position: relative;
+
+
+                .sendModal {
+                    position: absolute;
+                    right: 0;
+                    top: 100%;
+                    border-radius: 12px;
+                    background-color: #0b1220;
+                    padding: 16px 24px;
+                    text-align: center;
+                    opacity: 0;
+                    visibility: hidden;
+                    transform: translateY(-20px);
+                    transition: all .3s;
+                    width: 250px;
+                    z-index: 100;
+
+                    &.active {
+                        opacity: 1;
+                        visibility: visible;
+                        transform: translateY(0);
+                    }
+
+                    p {
+                        font-size: 16px;
+                        margin-top: 0;
+                        margin-bottom: 10px;
+                    }
+
+                    .btns {
+                        display: flex;
+                        justify-content: center;
+                        gap: 10px;
+                    }
+
+                    button {
+                        border: none;
+                        border-radius: 8px;
+                        padding: 8px 12px;
+                        color: white;
+                        width: 80px;
+                        text-align: center;
+
+                        &:first-child {
+                            background-color: #171a20;
+                        }
+
+                        &:last-child {
+                            background-color: #5000ca;
+                        }
+                    }
+                }
+            }
 
 
             .pc-lang {
@@ -154,7 +213,8 @@ $pc-white: #ffffff;
                     border-color: #5000ca;
                 }
             }
-            .pc-share{
+
+            .pc-share {
                 display: flex;
                 align-items: center;
                 gap: 5px;
@@ -181,6 +241,8 @@ $pc-white: #ffffff;
             backdrop-filter: blur(7px);
             overscroll-behavior: contain;
             scrollbar-color: $pc-bg transparent;
+            position: relative;
+            z-index: 1;
 
             .pc-msg {
                 margin-bottom: 10px;
@@ -271,7 +333,7 @@ $pc-white: #ffffff;
 // Responsive tweak for small screens
 @media (max-width: 768px) {
     .pc-panel {
-        width: calc(90vw);
+        width: 90vw !important;
         height: 500px;
         bottom: 76px;
     }
@@ -279,12 +341,12 @@ $pc-white: #ffffff;
 }
 
 @media (max-width: 576px) {
+
     .portfolio-chatbot {
         right: 20px;
         bottom: 25px;
 
         .pc-panel {
-            width: calc(100vw);
             height: 73vh;
             bottom: 76px;
         }

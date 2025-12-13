@@ -98,6 +98,7 @@ app.post("/chat", async (req, res) => {
 // Share Messages with email
 app.post("/share-email", async (req, res) => {
     try {
+        
         const { messages, timestamp } = req.body;
 
         if (!messages) return res.status(400).json({ error: "No messages to send" });

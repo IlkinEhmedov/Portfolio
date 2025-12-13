@@ -48,6 +48,7 @@ function Chatbot() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [isMessageSending, setisMessageSending] = useState(false)
+    const [sendModalOpen, setsendModalOpen] = useState(false)
     const scrollRef = useRef(null);
     const inputRef = useRef(null);
     const [messages, setMessages] = useState([
@@ -230,18 +231,23 @@ function Chatbot() {
                             EN
                         </button>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                        <button className="pc-close" aria-label="Close" onClick={() => setOpen(false)}>✕</button>
-                        {messages.length >= 3 &&
+                    <div className="share">
+                        {messages.length >= 1 &&
                             <button
                                 className={`pc-share active`}
-                                onClick={sendEmail}
-                                disabled={isMessageSending}
+                                onClick={() => setsendModalOpen(x => !x)}
                             >
-                                {isMessageSending ? "SENDING..." : "SEND CHAT TO ILKIN"} <IoIosSend />
+                                <IoIosSend />
                             </button>
                         }
-
+                        <button className="pc-close" aria-label="Close" onClick={() => setOpen(false)}>✕</button>
+                        <div className={`sendModal ${sendModalOpen ? "active" : ""}`}>
+                            <p>Send this chat to Ilkin</p>
+                            <div className="btns">
+                                <button onClick={() => setsendModalOpen(x => !x)}>Cancel</button>
+                                <button disabled={isMessageSending} onClick={sendEmail}>{!isMessageSending ? "Send" : "Sending..."}</button>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
