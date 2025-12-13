@@ -81,7 +81,6 @@ function Chatbot() {
                 role: m.sender === "user" ? "user" : "assistant",
                 content: m.text
             }));
-
         try {
             const res = await fetch(`${API_URL}/chat`, {
                 method: "POST",

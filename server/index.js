@@ -30,7 +30,7 @@ const client = new OpenAI({
 
 setInterval(async () => {
     try {
-        const url = process.env.PING_URL || `http://localhost:${PORT}/`;
+        const url = process.env.PING_URL || `https://portfolio-pa4g.onrender.com`;
         const res = await fetch(url);
         console.log(`Self-ping to ${url}: ${res.status}`);
     } catch (err) {
