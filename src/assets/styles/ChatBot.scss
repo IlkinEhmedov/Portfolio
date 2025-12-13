@@ -207,6 +207,11 @@ $pc-white: #ffffff;
                 color: black;
                 transition: all .3s;
 
+                svg {
+                    width: 15px;
+                    height: 15px;
+                }
+
                 &.active {
                     background: #5000ca;
                     color: white;
