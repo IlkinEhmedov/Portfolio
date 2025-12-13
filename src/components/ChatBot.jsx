@@ -191,6 +191,7 @@ function Chatbot() {
 
             if (!res.ok) throw new Error("Failed to send email");
             setisMessageSending(false)
+            setsendModalOpen(false)
             toast.success(lang === "en" ? "Messages sent via email!" : "Mesajlar email ilə göndərildi!");
         } catch (err) {
             setisMessageSending(false)
