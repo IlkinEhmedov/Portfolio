@@ -257,6 +257,12 @@ $pc-white: #ffffff;
                 max-width: 80%;
                 font-size: 14px;
                 line-height: 1.35;
+                ol{
+                    padding-inline-start: 15px;
+                }
+                ul{
+                    padding-inline-start: 15px;
+                }
 
                 &.bot {
                     background: #dbe4ff;

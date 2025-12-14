@@ -4,7 +4,7 @@ import avatar from "../assets/images/portfolio.jpeg";
 import '../assets/styles/Main.scss';
 import Aos from 'aos';
 import "aos/dist/aos.css";
-import myCv from "../assets/cv/Ilkin_CV.pdf"
+import myCv from "../assets/cv/CV.pdf"
 
 function Main() {
 

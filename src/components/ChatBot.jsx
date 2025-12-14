@@ -17,7 +17,7 @@ You know about Ilkin's personal and professional information:
 - Experience time: 2 years
 - Skills: Front End --- HTML / CSS, SCSS / Bootstrap / TailwindCSS / Material UI / Chakra UI, Javascript (ES6+) / TypeScript / Jquery, React js / ContextAPI / Redux Toolkit, Thunk, Next.js (SSR / SSG / ISR). Backend --- Node.js / Express.js / MongoDB, Mongoose / RESTful API Development / JSON, Socket.io
 - Projects: Proweb | Rəqəmsal həllər (Description: Modern corporate website developed using pure JavaScript, Bootstrap, and CSS, presenting company services, portfolio, blogs, news, and corporate content in a responsive layout.), Isguzar.az (Description: Developed isguzar.az, a job and service marketplace platform allowing clients and service providers to register, post listings, apply to opportunities, and communicate via real-time chat.), Azerbaijan Judo Federation (Description: Developed the official Azerbaijan Judo Federation website, presenting federation news, events, athlete information, competition results, and organizational content with a modern, responsive design.), Melhem International Hosptital (Description: Built a dynamic hospital website with user login and registration, doctor profile management, appointment scheduling, and detailed service and patient information.), Hertz Azerbaijan (Description: Built a rent-a-car website presenting car rentals, airport transfers, regional transfers, chauffeur services, and tours with a responsive and intuitive design.), NN Service (Description: Developed a service website for a household appliance repair company, presenting repair services for refrigerators, boilers, washing machines, and air conditioners with an easy booking system.), Alpi mobile az (Description: Developed the Alpi Mobile website under Bakcell, providing users with the ability to order mobile phones and SIM numbers through a clean, user-friendly interface.)
-- Project links: https://proweb.az, https://isguzar.az, https://melhemhospital.com, https://hertz.org.az, https://nnservice.az
+- Project links: https://proweb.az, https://isguzar.az, https://melhemhospital.com, https://hertz.org.az, https://nnservice.az, alpi mobile and Azerbaijan judo - incompleted projects
 - Email: ilkin656.u@gmail.com
 - Phone: +994505798656 
 - Linkedin: https://www.linkedin.com/in/ilkin-ahmadov-728460249/
@@ -25,7 +25,8 @@ You know about Ilkin's personal and professional information:
 - whatsapp: https://wa.me/+994505798656
 - Portfolio: https://ilkinahmadov.netlify.app
 - Date of birth: 5 july 2003
-- Date of place Azerbaijan, Ucar, Qaradaghli.
+- Living place: AZerbaijan, Baku city Binagadi district.
+- Date of place: Azerbaijan, Ucar, Qaradaghli.
 - Bachelor degree: Azerbaijan Technical university, Information technologies. graduated with honor diploma. (2020 - 2024)
 - Master degree: Azerbaijan Technical university, Information technologies and telecommunication systems engineering. (2024-present)
 - Langugae skilss: English-B1, Turkish-B2
@@ -36,6 +37,7 @@ You know about Ilkin's personal and professional information:
 IMPORTANT RULES:
 1. Only share the information listed above.
 2. If the user asks for information about Ilkin that is personal/private and does not exist above, answer like (English or Azerbaijani): Ilkin does not allow to share not allowed informations.
+3. If the user asks my projects, just send project name and links. then send more information about project if he or she asks.
 
 Answer politely in the language selected (English or Azerbaijani) according to the user's preference.
 If the user asks unrelated questions, answer politely but briefly.
@@ -65,7 +67,6 @@ function Chatbot() {
     const sendMessage = async () => {
         if (!input.trim() || loading) return;
 
-        setLoading(true);
         const userInput = input;
         setInput("");
 
@@ -82,6 +83,7 @@ function Chatbot() {
             }));
 
         try {
+            setLoading(true);
             const res = await fetch(`${API_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -96,6 +98,7 @@ function Chatbot() {
             // Typewriter effect
             let i = 0;
             const interval = setInterval(() => {
+                setLoading(true)
                 if (i <= aiText.length) {
                     setMessages(prev => [
                         ...prev.slice(0, -1), // remove previous typing/partial message
@@ -104,8 +107,10 @@ function Chatbot() {
                     i++;
                 } else {
                     clearInterval(interval);
+                    setLoading(false)
                 }
-            }, 20); // hər hərf üçün 20ms, istəyə görə sürəti dəyişə bilərsiniz
+            }, 5); // hər hərf üçün 20ms, istəyə görə sürəti dəyişə bilərsiniz
+            setLoading(false)
 
         } catch (err) {
             console.error(err);
@@ -292,8 +297,7 @@ function Chatbot() {
                         onKeyDown={(e) => !loading && e.key === "Enter" && sendMessage()}
                     />
                     <button onClick={sendMessage} disabled={loading}>
-                        {loading ? <TypingDots />
-                            : (lang === "en" ? "Send" : "Göndər")}
+                        {lang === "en" ? "Send" : "Göndər"}
                     </button>
                 </footer>
             </aside>
