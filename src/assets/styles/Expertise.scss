@@ -20,6 +20,7 @@
 .skills-container .skills-grid .skill {
     align-items: center;
     text-align: left;
+
     @media (max-width: 576px) {
         padding: 20px 0;
     }
@@ -30,14 +31,18 @@
 }
 
 .chip {
-    color: rgb(39, 40, 34) !important;
-    background-color: white !important;
+    border: 1px solid #804dcb !important;
+    background-color: #5000ca !important;
     font-size: 0.8rem !important;
     height: 25px !important;
+    transition: all .4s;
+    &:hover{
+        box-shadow: 0px 0px 0px 5px rgb(80, 0, 202,.6);
+    }
 
     span {
         font-family: 'Courier Prime', monospace;
-        color: rgb(39, 40, 34);
+        color: white;
     }
 
     svg {

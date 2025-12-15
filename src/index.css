@@ -216,6 +216,14 @@ button {
   cursor: pointer;
 }
 
+.back-to-top svg {
+  transition: all .4s;
+}
+
+.back-to-top:hover svg {
+  transform: translateY(-5px);
+}
+
 .back-to-top:active {
   background-color: rgb(80, 0, 202);
 }
@@ -228,6 +236,14 @@ button {
 }
 
 @media (max-width: 576px) {
+  .back-to-top:hover svg {
+    transform: translateY(0);
+  }
+
+  .back-to-top:active svg {
+    transform: translateY(-5px);
+  }
+
   .back-to-top {
     right: 20px;
   }

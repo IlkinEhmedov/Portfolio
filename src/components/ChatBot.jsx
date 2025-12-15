@@ -202,28 +202,26 @@ function Chatbot() {
                     </div>
 
                     <div className="share">
-                        {messages.length > 2 && (
+                        {messages.length >2 && (
                             <button onClick={() => setIsShareOpen(p => !p)}>
                                 <IoIosSend />
                             </button>
                         )}
                         <button onClick={() => setIsOpen(false)}>✕</button>
 
-                        {isShareOpen && (
-                            <div className="sendModal active">
-                                <p>{lang === "en" ? "Send this chat to Ilkin" : "Söhbəti İlkinə göndər"}</p>
-                                <div className="btns">
-                                    <button onClick={() => setIsShareOpen(false)}>
-                                        {lang === "en" ? "Cancel" : "Ləğv et"}
-                                    </button>
-                                    <button disabled={isSendingEmail} onClick={sendEmail}>
-                                        {isSendingEmail
-                                            ? lang === "en" ? "Sending..." : "Göndərilir..."
-                                            : lang === "en" ? "Send" : "Göndər"}
-                                    </button>
-                                </div>
+                        <div className={`sendModal ${isShareOpen ? "active" : ''}`}>
+                            <p>{lang === "en" ? "Send this chat to Ilkin" : "Söhbəti İlkinə göndər"}</p>
+                            <div className="btns">
+                                <button onClick={() => setIsShareOpen(false)}>
+                                    {lang === "en" ? "Cancel" : "Ləğv et"}
+                                </button>
+                                <button disabled={isSendingEmail} onClick={sendEmail}>
+                                    {isSendingEmail
+                                        ? lang === "en" ? "Sending..." : "Göndərilir..."
+                                        : lang === "en" ? "Send" : "Göndər"}
+                                </button>
                             </div>
-                        )}
+                        </div>
                     </div>
                 </header>
 

@@ -15,7 +15,7 @@ function Project() {
     Aos.init({ duration: 500, easing: "ease" })
     return (
         <div className="projects-container" id="projects" >
-            <h1 data-aos="fade-down">Personal Projects</h1>
+            <h1 data-aos="fade-down">Commercial Projects</h1>
             <div className="projects-grid">
                 <div className="project" data-aos="fade-right">
                     <a className='link' href="https://www.proweb.az" target="_blank" rel="noreferrer">
