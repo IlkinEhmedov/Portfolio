@@ -31,7 +31,8 @@ const labelsSecond = [
     "Mongoose",
     "RESTful APIs",
     "JSON",
-    "Socket.io"
+    "Socket.io",
+    "OpenAI"
 ];
 
 
