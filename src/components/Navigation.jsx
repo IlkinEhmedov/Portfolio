@@ -191,7 +191,7 @@ function Navigation({ parentToChild, modeChange }) {
                 </Button>
               ))}
             </Box>
-            <Box sx={{ marginLeft: 2 }}>
+            <Box sx={{ marginLeft: 2, display: "flex", alignItems: "center" }}>
               {mode === 'dark' ? (
                 <LightModeIcon onClick={modeChange} />
               ) : (
