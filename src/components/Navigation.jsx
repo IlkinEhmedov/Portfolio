@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/immutability */
-import { ArrowUpwardRounded, Search } from '@mui/icons-material';
+import { ArrowUpwardRounded } from '@mui/icons-material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import ListIcon from '@mui/icons-material/List';
@@ -16,7 +15,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import avatar from "../assets/images/ilkin_logo_circle.png";
 
 const drawerWidth = 240;
@@ -24,85 +23,14 @@ const navItems = [['Expertise', 'expertise'], ['History', 'history'], ['Projects
 
 function Navigation({ parentToChild, modeChange }) {
 
-  const inputRef = useRef()
   const { mode } = parentToChild;
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const [isInputActive, setisInputActive] = useState(false)
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-
-  useEffect(() => {
-    if (!searchQuery) {
-      clearHighlights();
-    } else {
-      highlightText(searchQuery);
-    }
-  }, [searchQuery]);
-
-  const handleInputChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  // Clear all previous highlights
-  const clearHighlights = () => {
-    const marks = document.querySelectorAll("mark.search-highlight");
-    marks.forEach((mark) => {
-      const parent = mark.parentNode;
-      parent.replaceChild(document.createTextNode(mark.textContent), mark);
-      parent.normalize(); // merge adjacent text nodes
-    });
-  };
-
-  // Highlight text on the page
-  const highlightText = (query) => {
-    clearHighlights();
-    if (!query) return;
-
-    const regex = new RegExp(query, "gi");
-    const container = document.body; // or a specific wrapper
-
-    traverseNodes(container, regex);
-  };
-
-  const traverseNodes = (node, regex) => {
-    if (node.nodeType === Node.TEXT_NODE) {
-      const parent = node.parentNode;
-      const text = node.nodeValue;
-
-      let match;
-      let lastIndex = 0;
-      const frag = document.createDocumentFragment();
-
-      while ((match = regex.exec(text)) !== null) {
-        if (match.index > lastIndex) {
-          frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
-        }
-
-        const mark = document.createElement("mark");
-        mark.className = "search-highlight";
-        mark.textContent = match[0];
-        frag.appendChild(mark);
-
-        lastIndex = regex.lastIndex;
-      }
-
-      if (lastIndex < text.length) {
-        frag.appendChild(document.createTextNode(text.slice(lastIndex)));
-      }
-
-      if (frag.childNodes.length > 0) {
-        parent.replaceChild(frag, node);
-      }
-    } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== "SCRIPT" && node.tagName !== "STYLE" && node.tagName !== "MARK") {
-      node.childNodes.forEach((child) => traverseNodes(child, regex));
-    }
-  };
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -129,39 +57,9 @@ function Navigation({ parentToChild, modeChange }) {
     }
   };
 
-  useEffect(() => {
-    const handleSearch = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
-        e.preventDefault();
-        setisInputActive(true);
-        inputRef.current?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", handleSearch);
-
-    return () => window.removeEventListener("keydown", handleSearch);
-  }, []);
-
-
-  useEffect(() => {
-    const handleEsc = (e) => e.key === "Escape" && setisInputActive(false);
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
-  }, [isInputActive])
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Box className={`search-input ${isInputActive ? "active" : ""}`}>
-        <input onChange={handleInputChange} ref={inputRef} placeholder='Search...' type="text" />
-      </Box>
       <AppBar component="nav" id="navigation" className={`navbar-fixed-top${scrolled ? ' scrolled' : ''}`}>
         <Toolbar className='navigation-bar'>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -180,10 +78,6 @@ function Navigation({ parentToChild, modeChange }) {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box onClick={() => setisInputActive(x => !x)} className='search' sx={{ display: 'flex', alignItems: 'center', gap: "10px" }}>
-              <Search />
-              <span>Search</span>
-            </Box>
             <Box sx={{ display: { xs: 'none', sm: 'flex' } }}>
               {navItems.map((item) => (
                 <Button key={item[0]} onClick={() => scrollToSection(item[1])} sx={{ color: '#fff' }}>
@@ -191,7 +85,7 @@ function Navigation({ parentToChild, modeChange }) {
                 </Button>
               ))}
             </Box>
-            <Box sx={{ marginLeft: 2, display: "flex", alignItems: "center" }}>
+            <Box sx={{ marginLeft: 2 }}>
               {mode === 'dark' ? (
                 <LightModeIcon onClick={modeChange} />
               ) : (
@@ -211,7 +105,7 @@ function Navigation({ parentToChild, modeChange }) {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-
+            
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
@@ -224,7 +118,7 @@ function Navigation({ parentToChild, modeChange }) {
                   <ListItemButton sx={{ textAlign: 'left' }} onClick={() => scrollToSection(item[1])}>
                     <ListItemText primary={item[0]} />
                   </ListItemButton>
-                  <ArrowUpwardRounded />
+                  <ArrowUpwardRounded/>
                 </ListItem>
               ))}
             </List>
