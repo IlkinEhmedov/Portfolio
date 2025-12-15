@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 1.1rem !important;
-  transition: all .3s;
+  transition: all .4s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -18,7 +18,7 @@ code {
 .main-container {
   position: relative;
   background-color: #0d1116;
-  transition: all .3s;
+  transition: all .4s;
 
 }
 
@@ -122,7 +122,7 @@ button {
 
 .light-mode {
   background-color: #f8f9fa;
-  transition: all .3s;
+  transition: all .4s;
 
   .pc-messages {
     background-color: #f8f9fa;

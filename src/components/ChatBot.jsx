@@ -1,12 +1,17 @@
 import { Chat } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { IoIosSend } from "react-icons/io";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "../assets/styles/ChatBot.scss";
-import toast from "react-hot-toast";
-import { IoIosSend } from "react-icons/io";
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL;
+
+const DEFAULT_MESSAGES = {
+    az: "Salam, sizə necə kömək edə bilərəm?",
+    en: "Hello, how can I assist you today?"
+};
 
 const systemPrompt = `
 You are Ilkin's personal assistant chatbot.
@@ -44,259 +49,243 @@ If the user asks unrelated questions, answer politely but briefly.
 `;
 
 function Chatbot() {
-
-    const [open, setOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState("en");
     const [input, setInput] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [isMessageSending, setisMessageSending] = useState(false)
-    const [sendModalOpen, setsendModalOpen] = useState(false)
+    const [messages, setMessages] = useState([
+        { sender: "bot", text: DEFAULT_MESSAGES.en }
+    ]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isShareOpen, setIsShareOpen] = useState(false);
+    const [isSendingEmail, setIsSendingEmail] = useState(false);
+
     const scrollRef = useRef(null);
     const inputRef = useRef(null);
-    const [messages, setMessages] = useState([
-        { sender: "bot", text: lang === "az" ? "Salam, sizə necə kömək edə bilərəm?" : "Hello, how can I assist you?" }
-    ]);
 
+    /* ---------------------------------- Utils --------------------------------- */
+
+    const scrollToBottom = () => {
+        scrollRef.current?.scrollTo({
+            top: scrollRef.current.scrollHeight,
+            behavior: "smooth"
+        });
+    };
+
+    const isDesktop = window.innerWidth >= 1024;
+
+    /* -------------------------------- Effects --------------------------------- */
+
+    useEffect(scrollToBottom, [messages, isOpen]);
+
+
+    const focus = () => {
+        setIsOpen(x => !x)
+        setTimeout(() => {
+            if (isDesktop) {
+                inputRef.current?.focus();
+            }
+        }, 100);
+    }
 
     useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        if (isDesktop) {
+            console.log('inputRef.current', inputRef.current)
+            inputRef.current?.focus();
         }
-    }, [messages, open]);
+    }, [isOpen, isLoading, lang, isDesktop]);
+    
+    useEffect(() => {
+        setMessages([{ sender: "bot", text: DEFAULT_MESSAGES[lang] }]);
+    }, [lang]);
 
-    const sendMessage = async () => {
-        if (!input.trim() || loading) return;
+    useEffect(() => {
+        const handleEsc = (e) => e.key === "Escape" && setIsOpen(false);
+        window.addEventListener("keydown", handleEsc);
+        return () => window.removeEventListener("keydown", handleEsc);
+    }, []);
 
-        const userInput = input;
-        setInput("");
+    /* ------------------------------- Chat Logic -------------------------------- */
 
-        const userMsg = { sender: "user", text: userInput };
-
-        // add user message + typing indicator
-        setMessages(m => [...m, userMsg, { sender: "bot", typing: true }]);
-
-        const safeMessages = [...messages, userMsg]
-            .filter(m => m.text && typeof m.text === "string")
+    const buildChatPayload = (userMessage) => {
+        return [...messages, userMessage]
+            .filter(m => m.text)
             .map(m => ({
                 role: m.sender === "user" ? "user" : "assistant",
                 content: m.text
             }));
+    };
+
+    const sendMessage = async () => {
+        if (!input.trim() || isLoading) return;
+
+        const userMessage = { sender: "user", text: input };
+        setInput("");
+
+        setMessages(prev => [...prev, userMessage, { sender: "bot", typing: true }]);
+        setIsLoading(true);
 
         try {
-            setLoading(true);
             const res = await fetch(`${API_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ messages: safeMessages, systemPrompt, lang })
+                body: JSON.stringify({
+                    messages: buildChatPayload(userMessage),
+                    systemPrompt,
+                    lang
+                })
             });
 
-            if (!res.ok) throw new Error("Request failed");
+            if (!res.ok) throw new Error("Chat request failed");
 
-            const data = await res.json();
-            const aiText = data.reply;
-
-            // Typewriter effect
-            let i = 0;
-            const interval = setInterval(() => {
-                setLoading(true)
-                if (i <= aiText.length) {
-                    setMessages(prev => [
-                        ...prev.slice(0, -1), // remove previous typing/partial message
-                        { sender: "bot", text: aiText.slice(0, i) }
-                    ]);
-                    i++;
-                } else {
-                    clearInterval(interval);
-                    setLoading(false)
+            const { reply } = await res.json();
+            typeWriter(reply);
+        } catch (error) {
+            console.log(error);
+            setMessages(prev => [
+                ...prev.slice(0, -1),
+                {
+                    sender: "bot",
+                    text: lang === "az"
+                        ? "Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin."
+                        : "An error occurred. Please try again."
                 }
-            }, 5); // hər hərf üçün 20ms, istəyə görə sürəti dəyişə bilərsiniz
-            setLoading(false)
-
-        } catch (err) {
-            console.error(err);
-            setMessages(m => [
-                ...m.slice(0, -1),
-                { sender: "bot", text: lang === "az" ? "Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin." : "An error occurred. Please try again." }
             ]);
+        } finally {
+            setIsLoading(false);
         }
-
-        setLoading(false);
     };
 
+    const typeWriter = (text) => {
+        let index = 0;
+        const interval = setInterval(() => {
+            setMessages(prev => [
+                ...prev.slice(0, -1),
+                { sender: "bot", text: text.slice(0, index) }
+            ]);
 
-
-
-
-
-
-    // ESC close
-    useEffect(() => {
-        const onKey = (e) => {
-            if (e.key === "Escape" && open) setOpen(false);
-        };
-        window.addEventListener("keydown", onKey);
-        return () => window.removeEventListener("keydown", onKey);
-    }, [open]);
-
-    const changeLang = (lang) => {
-        setLang(lang)
-    }
-
-    useEffect(() => {
-        const defaultMessage =
-            lang === "az"
-                ? "Salam, sizə necə kömək edə bilərəm?"
-                : "Hello, how can I assist you?";
-
-        setMessages([{ sender: "bot", text: defaultMessage }]);
-    }, [lang]);
-
-    const openModal = () => {
-        setOpen((s) => !s)
-
-        const isDesktop = window.innerWidth >= 1024;
-        if (isDesktop) {
-            inputRef.current.focus();
-        }
-    }
-
-    useEffect(() => {
-        const isDesktop = window.innerWidth >= 1024;
-        if (isDesktop && open && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [open, loading, messages, lang]);
-
-
-    const TypingDots = () => {
-        return (
-            <span className="typing">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
-        );
+            index++;
+            if (index > text.length) clearInterval(interval);
+        }, 8);
     };
+
+    /* ------------------------------- Email Logic ------------------------------- */
 
     const sendEmail = async () => {
-        setisMessageSending(true)
+        setIsSendingEmail(true);
+
         try {
-            const userMessages = messages
-                .map(m => m.sender === "user" ? "user: " + m.text : "bot: " + m.text)
+            const formattedMessages = messages
+                .map(m => `${m.sender}: ${m.text}`)
                 .join("\n");
 
             const res = await fetch(`${API_URL}/share-email`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    messages: userMessages,
+                    messages: formattedMessages,
                     timestamp: new Date().toISOString()
                 })
             });
 
-            if (!res.ok) throw new Error("Failed to send email");
-            setisMessageSending(false)
-            setsendModalOpen(false)
-            toast.success(lang === "en" ? "Messages sent via email!" : "Mesajlar email ilə göndərildi!");
+            if (!res.ok) throw new Error("Email failed");
+
+            toast.success(lang === "en"
+                ? "Messages sent via email!"
+                : "Mesajlar email ilə göndərildi!"
+            );
+
+            setIsShareOpen(false);
         } catch (err) {
-            setisMessageSending(false)
             console.error(err);
+        } finally {
+            setIsSendingEmail(false);
         }
-    }
+    };
 
+    /* ---------------------------------- UI ---------------------------------- */
 
+    const TypingDots = () => (
+        <span className="typing">
+            <span />
+            <span />
+            <span />
+        </span>
+    );
 
     return (
-        <div className={`portfolio-chatbot ${open ? "is-open" : ""}`} aria-live="polite">
-            <button
-                className="pc-toggle"
-                aria-label={open ? "Close chat" : "Open chat"}
-                aria-expanded={open}
-                onClick={() => openModal()}
-            >
-                <span className="pc-icon" aria-hidden><Chat /></span>
-                <span className="pc-label">Chat</span>
+        <div className={`portfolio-chatbot ${isOpen ? "is-open" : ""}`}>
+            <button className="pc-toggle" onClick={focus}>
+                <Chat />
+                <span>Chat</span>
             </button>
 
-            <aside className="pc-panel" role="dialog" aria-modal="false" aria-hidden={!open}>
+            <aside className="pc-panel" aria-hidden={!isOpen}>
                 <header className="pc-header">
-                    <div className="pc-title">İlkin {lang === 'en' ? "Assistant" : "Assistent"} 🦾</div>
-
+                    <h3>İlkin {lang === "en" ? "Assistant" : "Assistent"} 🦾</h3>
 
                     <div className="pc-lang">
-                        <button
-                            className={lang !== "az" ? "active" : ""}
-                            onClick={() => changeLang("az")}
-                        >
-                            AZ
-                        </button>
-                        <button
-                            className={lang !== "en" ? "active" : ""}
-                            onClick={() => changeLang("en")}
-                        >
-                            EN
-                        </button>
-                    </div>
-                    <div className="share">
-                        {messages.length >= 3 &&
+                        {["az", "en"].map(l => (
                             <button
-                                className={`pc-share active`}
-                                onClick={() => setsendModalOpen(x => !x)}
+                                key={l}
+                                className={lang === l ? "active" : ""}
+                                onClick={() => setLang(l)}
                             >
+                                {l.toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="share">
+                        {messages.length > 2 && (
+                            <button onClick={() => setIsShareOpen(p => !p)}>
                                 <IoIosSend />
                             </button>
-                        }
-                        <button className="pc-close" aria-label="Close" onClick={() => setOpen(false)}>✕</button>
-                        <div className={`sendModal ${sendModalOpen ? "active" : ""}`}>
-                            <p>Send this chat to Ilkin</p>
-                            <div className="btns">
-                                <button onClick={() => setsendModalOpen(x => !x)}>Cancel</button>
-                                <button disabled={isMessageSending} onClick={sendEmail}>{!isMessageSending ? "Send" : "Sending..."}</button>
+                        )}
+                        <button onClick={() => setIsOpen(false)}>✕</button>
+
+                        {isShareOpen && (
+                            <div className="sendModal active">
+                                <p>{lang === "en" ? "Send this chat to Ilkin" : "Söhbəti İlkinə göndər"}</p>
+                                <div className="btns">
+                                    <button onClick={() => setIsShareOpen(false)}>
+                                        {lang === "en" ? "Cancel" : "Ləğv et"}
+                                    </button>
+                                    <button disabled={isSendingEmail} onClick={sendEmail}>
+                                        {isSendingEmail
+                                            ? lang === "en" ? "Sending..." : "Göndərilir..."
+                                            : lang === "en" ? "Send" : "Göndər"}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </header>
 
                 <div className="pc-messages" ref={scrollRef}>
                     {messages.map((m, i) => (
-                        <div
-                            key={i}
-                            className={`pc-msg ${m.sender === "bot" ? "bot" : "user"}`}
-                            role={m.sender === "bot" ? "status" : "article"}
-                        >
+                        <div key={i} className={`pc-msg ${m.sender}`}>
                             {m.typing ? (
                                 <TypingDots />
                             ) : (
-                                <ReactMarkdown
-                                    remarkPlugins={[remarkGfm]}
-                                    components={{
-                                        a: ({ href, children }) => (
-                                            <a href={href} target="_blank" rel="noopener noreferrer">
-                                                {children}
-                                            </a>
-                                        )
-                                    }}
-                                >
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                     {m.text}
                                 </ReactMarkdown>
                             )}
-
                         </div>
                     ))}
                 </div>
 
-
                 <footer className="pc-input">
                     <input
+                        autoFocus
                         ref={inputRef}
-                        type="text"
-                        placeholder={lang === "en" ? "Type a message..." : "Mesaj yaz..."}
                         value={input}
-                        disabled={loading}
+                        disabled={isLoading}
+                        placeholder={lang === "en" ? "Type a message..." : "Mesaj yaz..."}
                         onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => !loading && e.key === "Enter" && sendMessage()}
+                        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                     />
-                    <button onClick={sendMessage} disabled={loading}>
+                    <button onClick={sendMessage} disabled={isLoading}>
                         {lang === "en" ? "Send" : "Göndər"}
                     </button>
                 </footer>
