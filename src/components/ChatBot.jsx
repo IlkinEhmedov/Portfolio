@@ -8,6 +8,7 @@ import "../assets/styles/ChatBot.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const systemPrompt = import.meta.env.VITE_SYSTEM_PROMTP;
+const SESSION_KEY = import.meta.env.VITE_SESSION_KEY;
 
 const DEFAULT_MESSAGES = {
     az: "Salam, sizə necə kömək edə bilərəm?",
@@ -51,17 +52,35 @@ function Chatbot() {
 
     /* -------------------------------- Effects --------------------------------- */
 
+    useEffect(() => {
+        const storedMessages = sessionStorage.getItem(SESSION_KEY);
+
+        if (storedMessages) {
+            setMessages(JSON.parse(storedMessages));
+        } else {
+            setMessages([{ sender: "bot", text: DEFAULT_MESSAGES[lang] }]);
+        }
+    }, [lang]);
+
+    useEffect(() => {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(messages));
+    }, [messages]);
+
+
+
     useEffect(scrollToBottom, [messages, isOpen]);
 
     useEffect(() => {
         if (isDesktop) {
-            console.log('inputRef.current', inputRef.current)
             inputRef.current?.focus();
         }
     }, [isOpen, isLoading, lang, isDesktop]);
 
     useEffect(() => {
-        setMessages([{ sender: "bot", text: DEFAULT_MESSAGES[lang] }]);
+        setMessages(prev => {
+            if (prev.length > 1) return prev;
+            return [{ sender: "bot", text: DEFAULT_MESSAGES[lang] }];
+        });
     }, [lang]);
 
     useEffect(() => {
@@ -202,7 +221,7 @@ function Chatbot() {
                     </div>
 
                     <div className="share">
-                        {messages.length >2 && (
+                        {messages.length > 2 && (
                             <button onClick={() => setIsShareOpen(p => !p)}>
                                 <IoIosSend />
                             </button>
@@ -231,7 +250,18 @@ function Chatbot() {
                             {m.typing ? (
                                 <TypingDots />
                             ) : (
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    components={{
+                                        a: ({ ...props }) => (
+                                            <a
+                                                {...props}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            />
+                                        ),
+                                    }}
+                                >
                                     {m.text}
                                 </ReactMarkdown>
                             )}
