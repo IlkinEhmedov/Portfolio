@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { IoIosSend } from "react-icons/io";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { IoCopyOutline } from "react-icons/io5";
 import "../assets/styles/ChatBot.scss";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -20,6 +21,7 @@ function Chatbot() {
     const [isOpen, setIsOpen] = useState(false);
     const [lang, setLang] = useState("en");
     const [input, setInput] = useState("");
+    const [copiedIndex, setCopiedIndex] = useState(null);
     const [messages, setMessages] = useState([
         { sender: "bot", text: DEFAULT_MESSAGES.en }
     ]);
@@ -49,6 +51,22 @@ function Chatbot() {
             }
         }, 100);
     }
+
+    const copy = async (text, index) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedIndex(index);
+
+            setTimeout(() => {
+                setCopiedIndex(null);
+            }, 2000);
+        } catch (err) {
+            console.error("Copy failed", err);
+        }
+    };
+
+
+
 
     /* -------------------------------- Effects --------------------------------- */
 
@@ -197,6 +215,8 @@ function Chatbot() {
         </span>
     );
 
+
+
     return (
         <div className={`portfolio-chatbot ${isOpen ? "is-open" : ""}`}>
             <button className="pc-toggle" onClick={focus}>
@@ -249,7 +269,7 @@ function Chatbot() {
                         <div key={i} className={`pc-msg ${m.sender}`}>
                             {m.typing ? (
                                 <TypingDots />
-                            ) : (
+                            ) : (<>
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm]}
                                     components={{
@@ -264,6 +284,15 @@ function Chatbot() {
                                 >
                                     {m.text}
                                 </ReactMarkdown>
+                                <div className="icons">
+                                    {copiedIndex === i ? (
+                                        <span className="copied-text">{lang === "en" ? "copied" : "kopyalandı"}</span>
+                                    ) : (
+                                        <IoCopyOutline onClick={() => copy(m.text, i)} />
+                                    )}
+                                </div>
+
+                            </>
                             )}
                         </div>
                     ))}
