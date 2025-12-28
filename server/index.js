@@ -1,15 +1,13 @@
 /* eslint-disable no-undef */
-import express from "express";
 import cors from "cors";
-import OpenAI from "openai";
 import dotenv from "dotenv";
+import express from "express";
 import rateLimit from "express-rate-limit";
-import fetch from "node-fetch";
+import OpenAI from "openai";
 import { Resend } from "resend";
 
 
 dotenv.config();
-const PING_INTERVAL = 5 * 60 * 1000;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,16 +28,6 @@ const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-setInterval(async () => {
-    try {
-        const url = process.env.PING_URL || `https://portfolio-pa4g.onrender.com`;
-        const res = await fetch(url);
-        console.log(`Self-ping to ${url}: ${res.status}`);
-    } catch (err) {
-        console.error("Self-ping error:", err.message);
-    }
-}, PING_INTERVAL);
 
 // Health check
 app.get("/", (req, res) => {

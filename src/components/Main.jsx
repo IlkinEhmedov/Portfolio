@@ -1,6 +1,6 @@
 import { EmailOutlined, WhatsApp, } from '@mui/icons-material';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import avatar from "../assets/images/ilkin.jpeg";
+import avatar from "../assets/images/Ilkin.jpeg";
 import '../assets/styles/Main.scss';
 import myCv from "../assets/cv/CV.pdf"
 

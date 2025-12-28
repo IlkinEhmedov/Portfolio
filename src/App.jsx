@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import './index.css';
 import './App.scss';
@@ -18,12 +19,29 @@ function App() {
     const [mode, setMode] = useState('dark');
     const [isLoading, setIsLoading] = useState(true);
     const [showBackToTop, setShowBackToTop] = useState(false);
-    
+
     const lastScrollY = useRef(0);
 
     const lenisRef = useRef();
 
     const chatRef = useRef(null);
+
+    const API_URL = import.meta.env.VITE_API_URL;
+
+
+    useEffect(() => {
+        const wakeServer = async () => {
+            try {
+                await fetch(`${API_URL}`);
+                console.log("Server wake-up request sent");
+            } catch (err) {
+                console.error("Wake-up failed:", err);
+            }
+        };
+
+        wakeServer();
+    }, []);
+
 
     useEffect(() => {
         const handleWheel = (e) => e.stopPropagation();
