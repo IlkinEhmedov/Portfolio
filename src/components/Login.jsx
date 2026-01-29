@@ -62,7 +62,7 @@ const Login = () => {
                     <div className="logo-circle">
                         <FiLock className="logo-icon" />
                     </div>
-                    <h1>Welcome Back</h1>
+                    <h1>Portfolio Management</h1>
                     <p>Sign in to your account</p>
                 </div>
 
@@ -74,7 +74,7 @@ const Login = () => {
                         </div>
                     )}
 
-                    <div className="form-group">
+                    <div className="form-groups">
                         <label htmlFor="email">Email Address</label>
                         <div className="input-wrapper">
                             <FiMail className="input-icon" />
@@ -91,7 +91,7 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-groups">
                         <label htmlFor="password">Password</label>
                         <div className="input-wrapper">
                             <FiLock className="input-icon" />
@@ -134,7 +134,7 @@ const Login = () => {
 
                 <div className="login-footer">
                     <p className="demo-info">
-                        <FiAlertCircle /> Demo credentials are stored in users.json
+                        <FiAlertCircle /> You can manage your portfolio projects here
                     </p>
                 </div>
             </div>

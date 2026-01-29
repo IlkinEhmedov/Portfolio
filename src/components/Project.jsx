@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "aos/dist/aos.css";
 import Aos from "aos";
 import "../assets/styles/Project.scss";
+import { Link } from "react-router";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Project() {
@@ -34,7 +35,9 @@ function Project() {
 
     return (
         <div className="projects-container" id="projects">
-            <h1 data-aos="fade-down">Commercial Projects</h1>
+            <Link to={'/login'} >
+                <h1 data-aos="fade-down">Commercial Projects</h1>
+            </Link>
 
             <div className="projects-grid">
                 {projects.map((project, index) => (

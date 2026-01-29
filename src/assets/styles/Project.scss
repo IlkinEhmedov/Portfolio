@@ -5,6 +5,12 @@
     text-align: left;
     overflow: hidden;
 }
+.projects-container a{
+    width: fit-content;
+}
+.projects-container h1{
+    width: fit-content;
+}
 
 .projects-container .projects-grid {
     display: grid;

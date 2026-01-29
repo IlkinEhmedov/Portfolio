@@ -17,7 +17,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import { useEffect, useState } from "react";
 import avatar from "../assets/images/ilkin_logo_circle.png";
-import { Link } from 'react-router';
 
 const drawerWidth = 240;
 const navItems = [['Expertise', 'expertise'], ['History', 'history'], ['Projects', 'projects'], ['Contact', 'contact']];
@@ -85,7 +84,6 @@ function Navigation({ parentToChild, modeChange }) {
                   {item[0]}
                 </Button>
               ))}
-              <Link to={'/login'}>Login</Link>
             </Box>
             <Box sx={{ marginLeft: 2 }}>
               {mode === 'dark' ? (
