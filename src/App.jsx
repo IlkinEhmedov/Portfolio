@@ -32,7 +32,6 @@ function App() {
                 console.error("Wake-up failed:", err);
             }
         };
-
         wakeServer();
     }, []);
 
