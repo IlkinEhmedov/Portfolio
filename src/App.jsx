@@ -147,7 +147,7 @@ function App() {
                     chatRef={chatRef}
                 />} />
                 <Route path="/dashboard" element={<PortfolioDashboard />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/logins" element={<Login />} />
             </Routes>
         </>
 
