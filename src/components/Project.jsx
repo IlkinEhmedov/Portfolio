@@ -31,7 +31,6 @@ function Project() {
     if (loading) {
         return <p style={{ textAlign: "center" }}>Loading projects...</p>;
     }
-    console.log('projects', projects);
 
     return (
         <div className="projects-container" id="projects">
