@@ -1,19 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState } from "react";
-import './index.css';
-import './App.scss';
-import Expertise from "./components/Expertise";
-import Main from "./components/Main";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-import Navigation from "./components/Navigation";
-import Timeline from "./components/Timeline";
-import Project from "./components/Project";
-import { Toaster } from "react-hot-toast";
-import PreLoader from "./components/PreLoader";
-import { ArrowUpward } from "@mui/icons-material";
-import Chatbot from "./components/ChatBot";
 import Lenis from "lenis";
+import { useEffect, useRef, useState } from "react";
+import { Route, Routes } from 'react-router-dom';
+import './App.scss';
+import PortfolioDashboard from "./components/Dashboard";
+import './index.css';
+import { Toaster } from "react-hot-toast";
+import Home from "./pages/Home";
+import Login from "./components/Login";
 
 function App() {
     const [mode, setMode] = useState('dark');
@@ -143,32 +137,19 @@ function App() {
 
     return (
         <>
-            <div
-                className={`back-to-top ${showBackToTop ? 'active' : ''}`}
-                onClick={scrollToTop}
-            >
-                <ArrowUpward sx={{ color: 'white' }} />
-            </div>
             <Toaster position="top-center" reverseOrder={false} />
-
-            {isLoading && <PreLoader />}
-
-            <div
-                className={`main-container ${mode === 'dark' ? 'dark-mode' : 'light-mode'}`}
-                style={{ display: isLoading ? 'none' : 'block' }}
-            >
-                <Navigation parentToChild={{ mode }} modeChange={handleModeChange} />
-                <Main />
-                <Expertise />
-                <Timeline />
-                <Project />
-                <Contact />
-                <Footer />
-            </div>
-
-            <div ref={chatRef}>
-                <Chatbot />
-            </div>
+            <Routes>
+                <Route path="/" element={<Home
+                    showBackToTop={showBackToTop}
+                    scrollToTop={scrollToTop}
+                    isLoading={isLoading}
+                    mode={mode}
+                    handleModeChange={handleModeChange}
+                    chatRef={chatRef}
+                />} />
+                <Route path="/dashboard" element={<PortfolioDashboard />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
         </>
 
     );
