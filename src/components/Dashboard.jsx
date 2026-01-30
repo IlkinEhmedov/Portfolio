@@ -22,6 +22,7 @@ const PortfolioDashboard = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [formData, setFormData] = useState({
         title: '',
+        link: '',
         description: '',
         image: null,
         isComplete: false
@@ -55,6 +56,7 @@ const PortfolioDashboard = () => {
         setLoading(true);
         try {
             const formDataToSend = new FormData();
+            formDataToSend.append('link', formData.link);
             formDataToSend.append('title', formData.title);
             formDataToSend.append('description', formData.description);
             formDataToSend.append('isComplete', formData.isComplete);
@@ -88,6 +90,7 @@ const PortfolioDashboard = () => {
         setLoading(true);
         try {
             const formDataToSend = new FormData();
+            formDataToSend.append('link', formData.link);
             formDataToSend.append('title', formData.title);
             formDataToSend.append('description', formData.description);
             formDataToSend.append('isComplete', formData.isComplete);
@@ -159,6 +162,7 @@ const PortfolioDashboard = () => {
         setFormData({
             title: '',
             description: '',
+            link: '',
             image: null,
             isComplete: false
         });
@@ -171,6 +175,7 @@ const PortfolioDashboard = () => {
         setEditingProject(project);
         setFormData({
             title: project.title,
+            link: project.link,
             description: project.description,
             image: project.image,
             isComplete: project.isComplete
@@ -189,6 +194,7 @@ const PortfolioDashboard = () => {
         setFormData({
             title: '',
             description: '',
+            link: '',
             image: null,
             isComplete: false
         });
@@ -265,6 +271,7 @@ const PortfolioDashboard = () => {
                             <tr>
                                 <th>Image</th>
                                 <th>Title</th>
+                                <th>Link</th>
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -288,6 +295,7 @@ const PortfolioDashboard = () => {
                                             />
                                         </td>
                                         <td className="project-title">{project.title}</td>
+                                        <td className="project-title">{project.link}</td>
                                         <td className="project-description">{project.description}</td>
                                         <td>
                                             <span className={`status-badge ${project.isComplete ? 'complete' : 'incomplete'}`}>
@@ -343,6 +351,16 @@ const PortfolioDashboard = () => {
                                         onChange={handleInputChange}
                                         required
                                         placeholder="Enter project title"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Link</label>
+                                    <input
+                                        type="url"
+                                        name="link"
+                                        value={formData.link}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter project link"
                                     />
                                 </div>
                                 <div className="form-group">

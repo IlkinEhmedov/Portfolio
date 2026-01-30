@@ -48,8 +48,8 @@ function Project() {
                     >
                         <a
                             className="link"
-                            href={project.link || "javascript:void(0)"}
-                            target="_blank"
+                            href={project.link || "#"}
+                            target={project.link && "_blank"}
                             rel="noreferrer"
                         >
                             <img

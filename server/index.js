@@ -98,7 +98,7 @@ app.post("/chat", async (req, res) => {
 // Add portfolio
 app.post('/portfolio', upload.single('image'), async (req, res) => {
     try {
-        const { title, description, isComplete } = req.body;
+        const { title, description, isComplete, link } = req.body;
 
         if (!req.file) {
             return res.status(400).json({ message: "Image is required" });
@@ -114,6 +114,7 @@ app.post('/portfolio', upload.single('image'), async (req, res) => {
         const portfolio = await Portfolio.create({
             image: result.secure_url,
             title,
+            link,
             description,
             isComplete: isComplete === "true"
         });
@@ -147,7 +148,7 @@ app.get('/portfolio', async (req, res) => {
 // Update portfolio
 app.put('/portfolio/:id', upload.single('image'), async (req, res) => {
     try {
-        const { title, description, isComplete } = req.body;
+        const { title, description, isComplete, link } = req.body;
 
         const portfolio = await Portfolio.findById(req.params.id);
         if (!portfolio) {
@@ -163,6 +164,7 @@ app.put('/portfolio/:id', upload.single('image'), async (req, res) => {
             portfolio.image = result.secure_url;
         }
 
+        if (link !== undefined) portfolio.link = link;
         if (title !== undefined) portfolio.title = title;
         if (description !== undefined) portfolio.description = description;
         if (isComplete !== undefined)

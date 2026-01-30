@@ -16,6 +16,11 @@ const portfolioSchema = new mongoose.Schema(
             required: true,
             trim: true
         },
+        link: {
+            type: String,
+            required: false,
+            trim: true
+        },
         isComplete: {
             type: Boolean,
             default: false
