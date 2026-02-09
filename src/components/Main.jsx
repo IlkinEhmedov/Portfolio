@@ -21,6 +21,8 @@ function Main() {
           <img src={avatar} alt="Avatar" />
         </div>
         <div className="content">
+          <h1>Ilkin Ahmadov</h1>
+          <p>Frontend Developer</p>
           <div className="social_icons">
             <a href="mailto:ilkin656.u@gmail.com" target="_blank" rel="noreferrer"><EmailOutlined /></a>
             <a href="https://www.linkedin.com/in/ilkin-ahmadov-728460249/" target="_blank" rel="noreferrer"><LinkedInIcon /></a>
@@ -33,8 +35,6 @@ function Main() {
             </a>
 
           </div>
-          <h1>Ilkin Ahmadov</h1>
-          <p>Frontend Developer</p>
 
           <button className='view' onClick={handleViewCV}>View my CV</button>
 

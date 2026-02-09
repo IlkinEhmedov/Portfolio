@@ -123,7 +123,7 @@ const Login = () => {
                     >
                         {loading ? (
                             <>
-                                <span className="spinner"></span>
+                                <span className="login-spinner"></span>
                                 Signing in...
                             </>
                         ) : (
