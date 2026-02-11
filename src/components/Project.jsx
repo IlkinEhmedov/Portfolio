@@ -35,7 +35,7 @@ function Project() {
 
     return (
         <div className="projects-container" id="projects">
-            <Link to={'/login'} target="_blank" >
+            <Link to={'/login'}>
                 <h1 data-aos="fade-down">Commercial Projects</h1>
             </Link>
 
