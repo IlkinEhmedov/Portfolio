@@ -35,9 +35,9 @@ const Home = ({
             >
                 <Navigation parentToChild={{ mode }} modeChange={handleModeChange} />
                 <Main />
+                <Project />
                 <Expertise />
                 <Timeline />
-                <Project />
                 <Contact />
                 <Footer />
             </div>
